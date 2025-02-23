@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bike Lanes & Bluebikes Stations Map</title>
+    <title>Bike Lanes & Bluebikes Map</title>
     <!-- Mapbox GL JS CSS -->
     <link
       href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css"
@@ -13,14 +13,28 @@
     <link rel="stylesheet" href="map.css" />
     <!-- Favicon -->
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <!-- Load map.js as an ES module -->
+    <!-- Load our JavaScript as an ES module -->
     <script src="map.js" type="module"></script>
   </head>
   <body>
+    <header>
     <h1>🚴🏼‍♀️ Bikewatching</h1>
-    <!-- The map container with an SVG overlay for station markers -->
+      <label for="time-slider">Filter by time:</label>
+      <input type="range" id="time-slider" min="-1" max="1440" value="-1" />
+      <div>
+        <time id="selected-time"></time>
+        <em id="any-time">(any time)</em>
+      </div>
+    </header>
+    <!-- Map container with an SVG overlay for station markers -->
     <div id="map">
       <svg></svg>
+    </div>
+    <!-- Legend showing the color coding for traffic flow -->
+    <div class="legend">
+      <div style="--departure-ratio: 1">More departures</div>
+      <div style="--departure-ratio: 0.5">Balanced</div>
+      <div style="--departure-ratio: 0">More arrivals</div>
     </div>
   </body>
 </html>
