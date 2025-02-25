@@ -1,78 +1,56 @@
 html, body {
-    margin: 5px;
-    padding: 5px;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-  }
-  
-  body {
-    font: 100%/1.5 system-ui, sans-serif;
-    display: flex;
-    flex-flow: column;
-    max-width: 80em;
-    min-height: 100vh;
-    box-sizing: border-box;
-    margin: auto;
-    padding: 1em;
-  }
-  
-  header {
-    display: flex;
-    gap: 1em;
-    align-items: baseline;
-  }
-  
-  .time {
-    display:block;
-  }
-  
-  #map {
-    width: 100%;    /* Adjust width to your desired size */
-    height: 100%;   /* Adjust height to your desired size */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for effect */
-    border-radius: 8px; /* Optional: rounded corners */
-  }
-  
-  #map svg {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-  
-  circle {
-    fill-opacity: 60%;
-    stroke: white;
-    stroke-width: 1;
-    fill:steelblue;
-    pointer-events: auto;
-  }
-  
-  .legend {
-    margin-block:4px;
-    display:flex;
-    padding: 10px;
-  }
-  
-  #map circle, .legend > div {
-    --color-departures: steelblue;
-    --color-arrivals: darkorange;
-    --color: color-mix(
+  margin: 0;
+  padding: 5;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center; 
+  align-items: center;    
+}
+   
+#map {
+  width: 100%;  
+  height: 100%;   
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px; 
+}
+
+circle {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+  --color: color-mix(
       in oklch,
       var(--color-departures) calc(100% * var(--departure-ratio)),
       var(--color-arrivals)
-    );
-    fill: var(--color);
-  }
-  
-  .legend > div {
-    flex: 1;
-    gap: 1px;
-    background-color: var(--color);
-    padding: 5px;
-    width: 200px;
-  }
+  );
+  fill: var(--color);
+  fill-opacity: 0.6;
+  stroke: white;
+  stroke-width: 1;
+  opacity: 0.8;
+  pointer-events: auto;
+}
+
+#map circle, .legend > div {
+--color-departures: steelblue;
+--color-arrivals: darkorange;
+--color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+);
+}
+
+.legend {
+display: flex;
+margin-block: 1rem;
+gap: 1px;
+}
+
+.legend > div {
+flex: 1;
+background: var(--color);
+color: white;
+padding: 0.5rem 2rem;
+text-align: center;
+}
