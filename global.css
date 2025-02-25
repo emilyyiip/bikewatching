@@ -8,47 +8,83 @@ body {
     margin: auto;
     padding: 1em;
   }
-  
-  header {
+
+html, body {
+    margin: 0;
+    padding: 5;
+    height: 100%;
+    width: 100%;
     display: flex;
-    gap: 1em;
-    align-items: baseline;
-  }
-  
-  .time {
-    display: block;
-  }
-  
-  .legend {
-    margin-block: 4px;
-    display: flex;
-    padding: 10px;
-  }
-  
-  .legend > div {
-    flex: 1;
-    gap: 1px;
-    background-color: var(--color);
-    padding: 5px;
-    width: 200px;
-  }
-  
-  #map circle, .legend > div {
+    justify-content: center;
+}
+     
+#map {
+    width: 100%;    /* Adjust width to your desired size */
+    height: 100%;   /* Adjust height to your desired size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for effect */
+    border-radius: 8px; /* Optional: rounded corners */
+}
+
+#map svg {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#map svg circle {
+    fill: steelblue;
+    fill-opacity: 0.6; /* 60% opacity */
+    stroke: white;
+    stroke-width: 1;
+    pointer-events: auto;
     --color-departures: steelblue;
     --color-arrivals: darkorange;
     --color: color-mix(
-      in oklch,
-      var(--color-departures) calc(100% * var(--departure-ratio)),
-      var(--color-arrivals)
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
     );
     fill: var(--color);
-  }
-  
-  circle {
-    fill-opacity: 60%;
-    stroke: white;
-    stroke-width: 1;
-    fill: steelblue;
-    pointer-events: auto;
-  }
-  
+}
+
+header {
+    display: flex;
+    gap: 1em;
+    align-items: baseline;
+}
+
+header label {
+    margin-left: auto; /* This can be removed as justify-content handles alignment */
+    text-align: right;
+}
+
+header em {
+    color: #888; /* Lighter color */
+    font-style: italic;
+}
+
+.legend > div {
+    --color-departures: steelblue;
+    --color-arrivals: darkorange;
+    --color: color-mix(
+    in oklch,
+    var(--color-departures) calc(100% * var(--departure-ratio)),
+    var(--color-arrivals)
+    );
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: var(--color);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.legend {
+    display: flex;         /* Enables flexbox */
+    gap: 1rem;            /* Adds spacing between items */
+    align-items: center;  /* Centers items vertically */
+    justify-content: center; /* Centers items horizontally */
+    margin-block: 1rem;
+}
