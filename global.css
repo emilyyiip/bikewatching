@@ -1,0 +1,54 @@
+body {
+    font: 100%/1.5 system-ui, sans-serif;
+    display: flex;
+    flex-flow: column;
+    max-width: 80em;
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: auto;
+    padding: 1em;
+  }
+  
+  header {
+    display: flex;
+    gap: 1em;
+    align-items: baseline;
+  }
+  
+  .time {
+    display: block;
+  }
+  
+  .legend {
+    margin-block: 4px;
+    display: flex;
+    padding: 10px;
+  }
+  
+  .legend > div {
+    flex: 1;
+    gap: 1px;
+    background-color: var(--color);
+    padding: 5px;
+    width: 200px;
+  }
+  
+  #map circle, .legend > div {
+    --color-departures: steelblue;
+    --color-arrivals: darkorange;
+    --color: color-mix(
+      in oklch,
+      var(--color-departures) calc(100% * var(--departure-ratio)),
+      var(--color-arrivals)
+    );
+    fill: var(--color);
+  }
+  
+  circle {
+    fill-opacity: 60%;
+    stroke: white;
+    stroke-width: 1;
+    fill: steelblue;
+    pointer-events: auto;
+  }
+  
