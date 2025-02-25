@@ -46,26 +46,28 @@ map.on('load', async () => {
   function minutesSinceMidnight(date) {
     return date.getHours() * 60 + date.getMinutes();
   }
-
   function filterTripsbyTime() {
-    const filteredTrips = timeFilter === -1 ? trips : trips.filter(trip => {
-      const startMin = minutesSinceMidnight(trip.started_at);
-      const endMin = minutesSinceMidnight(trip.ended_at);
-      return Math.abs(startMin - timeFilter) <= 60 || Math.abs(endMin - timeFilter) <= 60;
-    });
+    filteredTrips = timeFilter === -1
+        ? trips
+        : trips.filter(trip => {
+            const startMin = minutesSinceMidnight(trip.started_at);
+            const endMin = minutesSinceMidnight(trip.ended_at);
+            return Math.abs(startMin - timeFilter) <= 60 || Math.abs(endMin - timeFilter) <= 60;
+        });
 
-    const departures = d3.rollup(filteredTrips, v => v.length, d => d.start_station_id);
-    const arrivals = d3.rollup(filteredTrips, v => v.length, d => d.end_station_id);
+    filteredDepartures = d3.rollup(filteredTrips, v => v.length, d => d.start_station_id);
+    filteredArrivals = d3.rollup(filteredTrips, v => v.length, d => d.end_station_id);
 
-    stations = stations.map(station => ({
-      ...station,
-      arrivals: arrivals.get(station.short_name) ?? 0,
-      departures: departures.get(station.short_name) ?? 0,
-      totalTraffic: (arrivals.get(station.short_name) ?? 0) + (departures.get(station.short_name) ?? 0)
+    filteredStations = stations.map(station => ({
+        ...station,
+        arrivals: filteredArrivals.get(station.short_name) ?? 0,
+        departures: filteredDepartures.get(station.short_name) ?? 0,
+        totalTraffic: (filteredArrivals.get(station.short_name) ?? 0) + (filteredDepartures.get(station.short_name) ?? 0)
     }));
 
-    updateScatterPlot();
-  }
+    updateScatterPlot(); // 🛠 Update the visualization after filtering
+}
+
 
   function updateScatterPlot() {
     const radiusScale = d3.scaleSqrt()
@@ -88,11 +90,20 @@ map.on('load', async () => {
   }
 
   function updateTimeDisplay() {
-    timeFilter = Number(timeSlider.value);
-    selectedTime.textContent = timeFilter === -1 ? '' : formatTime(timeFilter);
-    anyTimeLabel.style.display = timeFilter === -1 ? 'block' : 'none';
+    timeFilter = Number(timeSlider.value);  
+
+    if (timeFilter === -1) {
+        selectedTime.textContent = '';  
+        anyTimeLabel.style.display = 'block';  
+    } else {
+        selectedTime.textContent = formatTime(timeFilter);  
+        anyTimeLabel.style.display = 'none';  
+    }
+
+    // 🛠 Force a re-computation of station traffic & update scatter plot
     filterTripsbyTime();
-  }
+    updateScatterPlot();
+}
 
   updateTimeDisplay();
   timeSlider.addEventListener('input', updateTimeDisplay);
