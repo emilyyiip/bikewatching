@@ -88,40 +88,64 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function updateScatterPlot() {
-            const radiusScale = d3.scaleSqrt()
-                .domain([0, d3.max(filteredStations, d => d.totalTraffic)])
-                .range([3, 50]); // ✅ Adjust circle sizes dynamically
+          const radiusScale = d3.scaleSqrt()
+              .domain([0, d3.max(filteredStations, d => d.totalTraffic)])
+              .range([3, 50]);
+      
+          svg.selectAll('circle')
+              .data(filteredStations, d => d.short_name)
+              .join(
+                  enter => enter.append('circle')
+                      .attr('r', d => radiusScale(d.totalTraffic))
+                      .attr('fill', 'steelblue')
+                      .attr('stroke', 'white')
+                      .attr('stroke-width', 1)
+                      .style('--departure-ratio', d => stationFlow(d.departures / d.totalTraffic))
+                      .each(function (d) {
+                          const lon = parseFloat(d.Long);
+                          const lat = parseFloat(d.Lat);
+      
+                          if (!isNaN(lon) && !isNaN(lat)) {
+                              const projected = map.project([lon, lat]);
+                              d3.select(this)
+                                  .attr('cx', projected.x)
+                                  .attr('cy', projected.y);
+                          } else {
+                              console.warn(`Invalid station coordinates:`, d);
+                          }
+                      })
+                      .call(enter => enter.append('title')
+                          .text(d => `${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals})`)),
+      
+                  update => update
+                      .transition().duration(500)
+                      .attr('r', d => radiusScale(d.totalTraffic))
+                      .style('--departure-ratio', d => stationFlow(d.departures / d.totalTraffic))
+                      .select('title')
+                      .text(d => `${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals})`)
+              );
+      
+          updatePositions();
+      }
+      
 
-            svg.selectAll('circle')
-                .data(filteredStations, d => d.short_name)
-                .join(
-                    enter => enter.append('circle')
-                        .attr('r', d => radiusScale(d.totalTraffic))
-                        .attr('fill', 'steelblue')
-                        .attr('stroke', 'white')
-                        .attr('stroke-width', 1)
-                        .style('--departure-ratio', d => stationFlow(d.departures / d.totalTraffic))
-                        .attr('cx', d => map.project([+d.Long, +d.Lat]).x)
-                        .attr('cy', d => map.project([+d.Long, +d.Lat]).y)
-                        .call(enter => enter.append('title')
-                            .text(d => `${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals})`)),
-
-                    update => update
-                        .transition().duration(500)
-                        .attr('r', d => radiusScale(d.totalTraffic))
-                        .style('--departure-ratio', d => stationFlow(d.departures / d.totalTraffic))
-                        .select('title')
-                        .text(d => `${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals})`)
-                );
-
-            updatePositions();
-        }
-
-        function updatePositions() {
-            svg.selectAll('circle')
-                .attr('cx', d => map.project([+d.Long, +d.Lat]).x)
-                .attr('cy', d => map.project([+d.Long, +d.Lat]).y);
-        }
+      function updatePositions() {
+        svg.selectAll('circle')
+            .each(function (d) {
+                const lon = parseFloat(d.Long);
+                const lat = parseFloat(d.Lat);
+    
+                if (!isNaN(lon) && !isNaN(lat)) {
+                    const projected = map.project([lon, lat]);
+                    d3.select(this)
+                        .attr('cx', projected.x)
+                        .attr('cy', projected.y);
+                } else {
+                    console.warn(`Invalid station coordinates in updatePositions:`, d);
+                }
+            });
+    }
+    
 
         function updateTimeDisplay() {
             timeFilter = Number(timeSlider.value);
