@@ -108,6 +108,7 @@ let jsonData;
                     .attr('stroke', 'white')    // Circle border color
                     .attr('stroke-width', 1)    // Circle border thickness
                     .attr('opacity', 0.8)      // Circle opacity
+                    .attr('pointer-events', 'auto')  // ✅ Enable pointer interactions
                     .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic)) 
                     .each(function(d) {
                         d3.select(this)
