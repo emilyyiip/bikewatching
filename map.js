@@ -99,22 +99,37 @@ let jsonData;
                 
                 let stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
 
+                const tooltip = d3.select("#tooltip");
+
                 const circles = svg.selectAll('circle')
                     .data(stations, (d) => d.short_name)
                     .enter()
                     .append('circle')
-                    .attr('r', d => radiusScale(d.totalTraffic))  // Radius of the circle
-                    .attr('fill', 'steelblue')  // Circle fill color
-                    .attr('stroke', 'white')    // Circle border color
-                    .attr('stroke-width', 1)    // Circle border thickness
-                    .attr('opacity', 0.8)      // Circle opacity
+                    .attr('r', d => radiusScale(d.totalTraffic))  
+                    .attr('fill', 'steelblue')  
+                    .attr('stroke', 'white')    
+                    .attr('stroke-width', 1)    
+                    .attr('opacity', 0.8)      
                     .attr('pointer-events', 'auto')  // ✅ Enable pointer interactions
-                    .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic)) 
-                    .each(function(d) {
-                        d3.select(this)
-                          .append('title')
-                          .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
-                      });
+                    .style("--departure-ratio", d => stationFlow(d.departures / d.totalTraffic))
+                    
+                    // ✅ Tooltip Event Listeners
+                    .on("mouseover", (event, d) => {
+                        tooltip.style("display", "block") // Show tooltip
+                            .html(`
+                                <strong>${d.short_name}</strong><br>
+                                ${d.totalTraffic} trips<br>
+                                ${d.departures} departures<br>
+                                ${d.arrivals} arrivals
+                            `);
+                    })
+                    .on("mousemove", (event) => {
+                        tooltip.style("left", `${event.pageX + 10}px`)
+                              .style("top", `${event.pageY - 20}px`);
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("display", "none"); // Hide tooltip
+                    });
 
                 function updatePositions() {
                     circles
