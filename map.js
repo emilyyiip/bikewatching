@@ -117,7 +117,6 @@ let jsonData;
                     .on("mouseover", (event, d) => {
                         tooltip.style("display", "block") // Show tooltip
                             .html(`
-                                <strong>${d.short_name}</strong><br>
                                 ${d.totalTraffic} trips<br>
                                 ${d.departures} departures<br>
                                 ${d.arrivals} arrivals
