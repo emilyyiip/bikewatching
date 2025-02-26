@@ -88,3 +88,7 @@ header em {
     justify-content: center; /* Centers items horizontally */
     margin-block: 1rem;
 }
+
+circle {
+    pointer-events: auto;  /* Allows tooltip hover */
+}
